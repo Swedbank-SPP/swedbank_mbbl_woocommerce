@@ -117,7 +117,7 @@ function filter_gateways2($gateways)
                 $desk = '<ul>';
 
                 foreach ($value as $item){
-                    $desk .= '<li style="display: block"><a id="'.$item['id'].'" style="border: 2px solid #fff; border-radius: 8px;padding: 8px; display: inline-block; cursor: pointer; margin-bottom: 8px;" onclick="const d = new Date();d.setTime(d.getTime() + (1*24*60*60*1000));let expires = \'expires=\'+ d.toUTCString();document.cookie = \'setswpaytype='.$item['id'].';\' + expires + \';path=/\'; var el = this.parentNode.parentNode.getElementsByTagName(\'a\'); Array.prototype.forEach.call(el, function(el){ el.classList.remove(\'SWborder\') }); this.classList.add(\'SWborder\')" ><img src="'.$item['icon'].'" alt="'.$item['title'].'" height="24px" > </a></li>';
+                    $desk .= '<li style="display: block"><a id="'.$item['id'].'" style="border: 2px solid #fff; border-radius: 8px;padding: 8px; display: inline-block; cursor: pointer; margin-bottom: 8px;" onclick="const d = new Date();d.setTime(d.getTime() + (1*24*60*60*1000));let expires = \'expires=\'+ d.toUTCString();document.cookie = \'setswpaytype='.$item['id'].';\' + expires + \';path=/\'; var el = this.parentNode.parentNode.getElementsByTagName(\'a\'); Array.prototype.forEach.call(el, function(el){ el.classList.remove(\'SWborder\') }); this.classList.add(\'SWborder\')" ><img src="'.$item['icon'].'" alt="'.$item['title'].'" height="24px" style="height: 24px" > </a></li>';
                     $i++;
                 }
                 $desk .= '</ul>
