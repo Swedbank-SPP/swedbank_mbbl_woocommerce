@@ -5,7 +5,7 @@
  * Description: Swedbank gateway V2 for Bank Link and Bank Instance support for WooCommerce.
  * Author: Darius Augaitis
  * Author URI:
- * Version: 2.0.0
+ * Version: 2.0.2
  * Text Domain: swedbank-plugin
  * Domain Path: /languages
  *
@@ -53,6 +53,12 @@ add_filter('woocommerce_payment_gateways', 'add_swedbank_v2_mbbl_gateway_class')
 
 add_filter('woocommerce_available_payment_gateways', 'filter_gateways2', 1);
 
+function swedbank_log($text) {
+    $text = print_r($text, true);
+
+    file_put_contents( __DIR__.'/../../uploads/wc-logs/Swedbak_MBBL_V2.log', date("Y-m-d H:i:s") . "\n-----\n$text\n\n", FILE_APPEND | LOCK_EX);
+}
+
 function filter_gateways2($gateways)
 {
     global $woocommerce;
@@ -60,7 +66,11 @@ function filter_gateways2($gateways)
     // return $gateways
     if (isset($gateways['swedbank_mbbl_v2'])) {
         $lnv = '';
-        switch (strtolower(explode('_',get_locale())[1])) {
+        $langv = strtolower(explode('_',get_locale())[1]);
+        if(empty($langv)){
+            $langv = strtolower(get_locale());
+        }
+        switch ($langv) {
             case 'en':
                 $lnv = 'en';
                 break;
@@ -71,6 +81,9 @@ function filter_gateways2($gateways)
                 $lnv = 'et';
                 break;
             case 'et':
+                $lnv = 'et';
+                break;
+            case 'ee':
                 $lnv = 'et';
                 break;
             case 'ru':
@@ -102,7 +115,7 @@ function filter_gateways2($gateways)
             }
 
         } catch (Exception $ex){
-            $gateways['swedbank_mbbl_v2']->settings['debuging'] === 'yes' ? $this->log(print_r($ex,true)) : null;
+            $gateways['swedbank_mbbl_v2']->settings['debuging'] === 'yes' ? swedbank_log(print_r($ex,true)) : null;
             //wc_add_notice(__('Something went wrong, please try agian later', 'woocommerce'), 'error');
         }
 
@@ -111,7 +124,15 @@ function filter_gateways2($gateways)
                 $gateways['swedbank_mbbl_v2_'.$key] = clone $gateways['swedbank_mbbl_v2'];
                 $gateways['swedbank_mbbl_v2_'.$key]->icon = false;
                 $gateways['swedbank_mbbl_v2_'.$key]->id = 'swedbank_mbbl_v2_'.$key;
-                $gateways['swedbank_mbbl_v2_'.$key]->title = 'Banklink '.(count($pList) > 1 ? '('.$key.')' : '');
+                //swedbank_log(print_r('Page language '.get_locale() ,true));
+                //swedbank_log(print_r($lnv ,true));
+                if($lnv == 'et'){
+                    $text = 'Pangalink';
+                } else {
+                    $text = 'Bank link';
+                }
+
+                $gateways['swedbank_mbbl_v2_'.$key]->title = $text.' '.(count($pList) > 1 ? '('.$key.')' : '');
 
                 $i = 1;
                 $desk = '<ul>';
